@@ -4,39 +4,28 @@ import Cell from './Cell';
 const Row = (props)=> {
 
    const {
-       cells,
+       row,
        indexRow,
-       rows,
-       addActiveCells} = props;
-
-
+       addActiveCells
+   } = props;
 
     function  createCells() {
 
-        let count = 0;
         const mappingEL = [];
 
-        while (count<6){
-
-            mappingEL.push(<Cell
-                    cells={cells}
-                    key={count}
-                    indexRow={indexRow}
-                    indexCell={(count)+(indexRow*6)}
-                    rows={rows}
-                    addActiveCells={addActiveCells}
-                />
-            );
-            count ++;
+        for (let i = 0 ; i < row.length; i++) {
+                mappingEL.push(<Cell
+                        key={i}
+                        cell={row[i]}
+                        indexRow={indexRow}
+                        indexCell={i}
+                        addActiveCells={addActiveCells}
+                    />
+                );
         }
 
         return mappingEL.map(cell=>cell);
-
     }
-
-
-
-
 
     return (
              <tr>

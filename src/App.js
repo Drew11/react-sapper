@@ -1,153 +1,119 @@
 import React from 'react';
 import Row from './components/Row';
+import {createDataObjects} from './helpers/helpers';
 
 import './App.css';
 
 class App extends React.Component {
 
-  constructor(){
-    super();
-    this.state={
-        cells:[
-                  {value: "П", active: false},
-                  {value: "П", active: false},
-                  {value: "K", active: false},
-                  {value: "Б", active: false},
-                  {value: "K", active: false},
-                  {value: "K", active: false},
-
-                  {value: "П", active: false},
-                  {value: "П", active: false},
-                  {value: "K", active: false},
-                  {value: "Б", active: false},
-                  {value: "Б", active: false},
-                  {value: "Б", active: false},
-
-                  {value: "П", active: false},
-                  {value: "К", active: false},
-                  {value: "K", active: false},
-                  {value: "Б", active: false},
-                  {value: "Б", active: false},
-                  {value: "Б", active: false},
-
-
-        ],
-
-        activeCellIndexes: [],
-
-
-        currentIndexCell: '',
-
+    constructor() {
+        super();
+        this.state = {
+            cells: [],
+        }
     }
 
+    addActiveCells = (indecies) => {
+        const cells = this.state.cells;
+        let neighbors = [];
 
-  }
+        for (let k = 0; k < indecies.length; k++) {
 
-  addActiveCells = (indexCell) => {
+            let clickI = indecies[k].indexRow;
+            let clickJ = indecies[k].indexCell;
 
-          const activeCell = this.state.cells[indexCell];
-          activeCell.active = true;
-          this.state.cells[indexCell] = activeCell;
+            this.state.cells[clickI][clickJ].active = true;
 
-          if(this.state.activeCellIndexes.includes(indexCell)){
-              return
-          }
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    if (
+                        (i === 0 && j === 0)
+                        || clickI + i < 0
+                        || clickJ + j < 0
+                        || clickI + i > cells.length - 1
+                        || clickJ + j > cells[0].length - 1
+                    ) continue;
+                    if ((cells[clickI + i][clickJ + j].value === cells[clickI][clickJ].value) &&
+                        cells[clickI + i][clickJ + j].active === false
+                    ) {
+                        neighbors.push({indexRow: clickI + i, indexCell: clickJ + j})
+                    }
+                }
+            }
+        }
 
-          if(!this.state.activeCellIndexes.includes(indexCell)){
-              const copy = [...this.state.activeCellIndexes];
-              copy.push(indexCell);
-
-              this.setState({...this.state,
-                            activeCellIndexes: copy
-              })
-          }
-
-          const nextCellRight = this.state.cells[indexCell+1];
-          const nextCellLeft = this.state.cells[indexCell-1];
-
-          const nextBottomRight = this.state.cells[indexCell+7];
-          const nextBottomCenter = this.state.cells[indexCell+6];
-          const nextBottomLeft = this.state.cells[indexCell+5];
-
-
-
-          console.log(activeCell )
-          if(nextCellRight && activeCell.value===nextCellRight.value) {
-              indexCell=indexCell+1;
-              return this.addActiveCells(indexCell);
-          }
-
-          // if(activeCell.value===nextCellLeft.value) {
-          //     indexCell=indexCell-1;
-          //     return this.addActiveCells(indexCell);
-          // }
+        if (neighbors.length) {
+            this.addActiveCells(neighbors)
+        }
 
 
-          if(nextBottomLeft && activeCell.value===nextBottomLeft.value) {
-              indexCell=indexCell+5;
-              this.addActiveCells(indexCell);
-          }
-
-          if( nextBottomCenter && activeCell.value === nextBottomCenter.value) {
-              indexCell=indexCell+6;
-              this.addActiveCells(indexCell);
-          }
-
-          if( nextBottomRight && activeCell.value === nextBottomRight.value) {
-                  indexCell=indexCell+7;
-              this.addActiveCells(indexCell);
-          }
-
-          this.setState({
-              ...this.state,
-              cells: this.state.cells
-          });
-
-
-  };
-
-
-
-  createRows = () => {
-
-
-      let count = 0;
-      const mappingEl = [];
-
-      while (count<7){
-
-          mappingEl.push(
-              <Row
-                  key={count}
-                  indexRow={count}
-                  cells={this.state.cells}
-                  addActiveCells={this.addActiveCells}
-               />
-          );
-
-          count++;
-      }
-
-      return mappingEl.map(component=>component);
+        this.setState({
+            ...this.state,
+            cells: this.state.cells
+        });
 
     };
 
-  render(){
-     console.log(this.state.cells)
-      return (
-          <div className="App">
-             <table>
-                 <tbody>
-                    {this.createRows()}
-                 </tbody>
-             </table>
-          </div>
-      );
-  }
+    checkAllcells = ()=>{
+       const filteredRows = this.state.cells.filter(row=>
+           row.filter(cell=>cell.active===false).length
+       );
+
+       return filteredRows.length;
+   };
+
+    createRows = (cells) => {
+        const mappingEl = [];
+        for (let i = 0; i < cells.length; i++ ) {
+            mappingEl.push(
+                <Row
+                    key={i}
+                    row={cells[i]}
+                    indexRow = {i}
+                    addActiveCells={this.addActiveCells}
+                />
+            );
+        }
+
+        return mappingEl.map(component => component);
+
+    };
+
+
+    componentDidMount(){
+
+       this.setState({
+           ...this.state,
+           cells: [...this.state.cells, ...createDataObjects()]
+       })
+
+    }
+    render() {
+
+
+        return (
+
+            <div className="App">
+
+                {this.checkAllcells() ? null :
+                    <button
+                        onClick={()=> this.setState({
+                            ...this.state,
+                            cells: createDataObjects()
+                        })}
+                    >
+                        Restart
+                    </button>}
+
+                <table>
+                    <tbody>
+                    {this.createRows(this.state.cells)}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
 
 }
 
 export default App;
-
-
-//index+!

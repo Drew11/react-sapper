@@ -6,5 +6,5 @@ td {
 
 .active {
     text-decoration: line-through;
-    background-color: gray;
+    background-color: gray !important;
 }

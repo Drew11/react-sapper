@@ -1,34 +1,28 @@
-import React, {useState} from 'react';
-import {checkCells} from  '../helpers/checkCells';
+import React from 'react';
 import './style/cell.css';
 
 const Cell = (props)=> {
     const {
+        cell,
         indexRow,
-        cells,
+        indexCell,
         addActiveCells,
-        indexCell
     } = props;
 
-    // const [active, setActive] = useState(false);
-       //let currentCell = rows[indexRow][indexCell];
 
-    const cell = cells[indexCell];
+    return (
+        <td
+            className={cell && cell.active ? 'active': ''}
+            style={{background: cell.value }}
+            onClick = {()=>{
+                addActiveCells([{indexRow: indexRow, indexCell: indexCell}]);
+            }}
+        >
+            {cell.value}
+        </td>
+    );
 
-        return (
-            <td
-                className={cell&&cell.active?'active': ''}
-
-                onClick={()=>{
-                    addActiveCells(indexCell);
-                }}
-            >
-                {cell&&cell.value} {indexCell}
-
-            </td>
-        );
-
- };
+};
 
 
 
