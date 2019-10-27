@@ -12,13 +12,11 @@ const Cell = (props)=> {
 
     return (
         <td
-            className={cell && cell.active ? 'active': ''}
-            style={{background: cell.value }}
+            className={cell && cell.active ? 'active': `${cell.value}`}
             onClick = {()=>{
                 addActiveCells([{indexRow: indexRow, indexCell: indexCell}]);
             }}
         >
-            {cell.value}
         </td>
     );
 

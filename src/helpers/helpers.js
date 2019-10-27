@@ -1,10 +1,10 @@
 export function createDataObjects() {
 
     const values = {
-        1: "red",
-        2: "yellow",
-        3: "green",
-        4: "blue",
+        1: "peaks",
+        2: "diamonds",
+        3: "hearts",
+        4: "cross",
     };
 
     let cells = [];
@@ -20,3 +20,4 @@ export function createDataObjects() {
 
     return cells;
 }
+

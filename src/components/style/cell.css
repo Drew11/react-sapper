@@ -4,7 +4,24 @@ td {
     height: 50px;
 }
 
+.peaks {
+    background: url("./svg/peaks.svg") no-repeat;
+}
+
+.diamonds {
+    background: url("./svg/diamonds.svg") no-repeat;
+}
+
+.hearts {
+    background: url("./svg/hearts.svg") no-repeat;
+}
+
+.cross {
+    background: url("./svg/cross.svg") no-repeat;
+}
+
 .active {
     text-decoration: line-through;
     background-color: gray !important;
 }
+
