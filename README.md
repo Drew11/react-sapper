@@ -1,2 +1,2 @@
->[Demo](https://drew11.github.io/react-sapper)
+>[Demo](https://drew11.github.io/react-sapper/)
 
